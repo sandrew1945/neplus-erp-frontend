@@ -36,25 +36,47 @@
           class="col-md-2 col-xs-4"
           model=""
         />
-<!--        <q-btn-->
-<!--          label="保存权限"-->
-<!--          icon="grading"-->
-<!--          color="primary"-->
-<!--          @click="handleSave"-->
-<!--        />-->
-<!--        <q-btn-->
-<!--          label="返回"-->
-<!--          icon="reply"-->
-<!--          color="grey"-->
-<!--          @click="cancel"-->
-<!--        />-->
+        <q-btn
+          v-if="taskInfo.taskStatus === 20061001"
+          label="开始处理"
+          icon="start"
+          color="secondary"
+          @click="handleStart"
+        />
+        <q-btn
+          label="返回"
+          icon="reply"
+          color="grey"
+          @click="cancel"
+        />
       </div>
       <div class="row q-gutter-md">
         <q-timeline layout="loose" color="secondary">
           <q-timeline-entry heading>
             税务申报
           </q-timeline-entry>
-
+          <q-timeline-entry
+            title="任务创建"
+            icon="flag_circle"
+            :subtitle="dateFormatter(taskInfo.createDate)"
+          >
+          </q-timeline-entry>
+          <q-timeline-entry
+            v-for="tp in taskProcess"
+            :key="tp.processId"
+            :side="tp.optBy === store.getId ? 'right' : 'left'"
+            :title="fixcodeTranslate(tp.taskStatusTo)"
+            :subtitle="dateFormatter(tp.optDate)"
+            :avatar="loadUrl + `generate/loadImage?filePath=${tp.avatar}`"
+          >
+            <div>
+              操作人: {{ tp.optName }}
+            </div>
+            <div>
+              备注: {{ tp.comment || '无' }}
+            </div>
+          </q-timeline-entry>
+          <!--
           <q-timeline-entry
             title="账务处理"
             subtitle="01/12/2024"
@@ -122,6 +144,7 @@
               备注: 无
             </div>
           </q-timeline-entry>
+          -->
         </q-timeline>
       </div>
 <!--      <div class="row q-gutter-md">-->
@@ -142,26 +165,19 @@
 <!--          />-->
 <!--        </div>-->
 <!--      </div>-->
-      <div class="row q-gutter-md justify-end">
-        <div class="col-md-5">
-        <q-btn
-          label="自审"
-          icon="grading"
-          color="primary"
-          @click="handleSave"
-        />
-        </div>
-      </div>
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { fetchTaskInfo } from 'src/api/taskmanager';
-import { TaskInfo } from 'src/models/taskmanager-model';
+import { computed, onBeforeMount, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { fetchTaskInfo, fetchTaskProcessList } from 'src/api/taskmanager';
+import { TaskInfo, TaskProcess } from 'src/models/taskmanager-model';
 import FixcodeSelect from 'components/FixcodeSelect/index.vue';
+import { date } from 'quasar';
+import { getfixCodeDesc } from 'src/utils/fixcode';
+import { useUserStore } from 'stores/user';
 
 const taskId = ref(null)
 // const treeNodes = ref([])
@@ -176,72 +192,75 @@ const taskInfo = ref<TaskInfo>({
   approveName: null,
   taskType: '',
   taskStatus: '',
-  docFile: null,
-  docFilePath: null,
-  docArchiveDate: null,
-  bankNotesFile: null,
-  bankNotesArchiveDate: null,
-  bankNotesPath: null,
-  selfExamFile: null,
-  selfExamArchiveDate: null,
-  draftFile: null,
-  draftCreateDate: null,
-  dirRejDate: null,
-  dirRejCmnt: null,
-  cliRejDate: null,
-  cliRejCmnt: null,
 })
 
+const store = useUserStore();
 
+const taskProcess = ref<TaskProcess>([])
+
+const loadUrl = computed({
+  get() {
+    return process.env.API
+  }
+})
 
 const route = useRoute()
 // const router = useRouter()
 onBeforeMount(() => {
   taskId.value = route.params.id
   getTaskInfo()
+  getTaskProcessList()
+  console.log(JSON.stringify(taskProcess.value))
 })
 
 const getTaskInfo = () => {
   fetchTaskInfo(taskId.value).then(response => {
-    console.log(JSON.stringify(response))
     taskInfo.value.taskId = response.data.taskId
     taskInfo.value.clientName = response.data.clientName
     taskInfo.value.clientType = response.data.clientType
     taskInfo.value.clientEmail = response.data.clientEmail
+    taskInfo.value.clientMobile = response.data.clientMobile
+    taskInfo.value.clientTel = response.data.clientTel
     taskInfo.value.optName = response.data.optName
     taskInfo.value.approveName = response.data.approveName
     taskInfo.value.taskType = '' + response.data.taskType
     taskInfo.value.taskStatus = response.data.taskStatus
-    taskInfo.value.docFile = response.data.docFile
-    taskInfo.value.docArchiveDate = response.data.docArchiveDate
-    taskInfo.value.bankNotesFile = response.data.bankNotesFile
-    taskInfo.value.bankNotesArchiveDate = response.data.bankNotesArchiveDate
-    taskInfo.value.selfExamFile = response.data.selfExamFile
-    taskInfo.value.selfExamArchiveDate = response.data.selfExamArchiveDate
-    taskInfo.value.draftFile = response.data.draftFile
-    taskInfo.value.draftCreateDate = response.data.draftCreateDate
-    taskInfo.value.dirRejDate = response.data.dirRejDate
-    taskInfo.value.dirRejCmnt = 'qwieqwneiqwehquiwehuqiwehquiwehquiwheuiqwehuqwehiuqwehiuqwe'//response.data.dirRejCmnt
-    taskInfo.value.cliRejDate = response.data.cliRejCmnt
-    taskInfo.value.cliRejCmnt = response.data.cliRejCmnt
+    taskInfo.value.createDate = response.data.createDate
   })
 }
 
-// const handleSave = () => {
-//   const functionIdArray = []
-//   ticked.value.forEach(key => {
-//     const node = tree.value.getNodeByKey(key)
-//     functionIdArray.push(node.functionId)
-//   })
-//   const params = { roleId: node.value.roleId, functionIds: functionIdArray }
-//   saveSelectedFunc(params).then((response) => {
-//     if (response.result === true) {
-//       successNotify('Save Successfully')
-//     }
-//   })
-// }
-// const cancel = () => {
-//   router.back(-1)
-// }
+const getTaskProcessList = () => {
+  fetchTaskProcessList(taskId.value).then(response => {
+    console.log(response.data)
+    taskProcess.value = response.data
+  })
+}
+const dateFormatter = (val, format) => {
+  if (!val) {
+    return ''
+  }
+  return date.formatDate(val, format ? format : 'DD-MM-YYYY')
+}
+
+const fixcodeTranslate = (fixcode) => {
+  if (!fixcode) {
+    return ''
+  }
+  return getfixCodeDesc(fixcode)
+}
+
+const handleStart = () => {
+  const params = { roleId: node.value.roleId, functionIds: functionIdArray }
+  saveSelectedFunc(params).then((response) => {
+    if (response.result === true) {
+      successNotify('Save Successfully')
+    }
+  })
+}
+
+const router = useRouter()
+const cancel = () => {
+  router.back(-1)
+}
 
 </script>

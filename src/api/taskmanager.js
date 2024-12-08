@@ -33,6 +33,11 @@ export function deleteTask (data) {
   })
 }
 
+/**
+ *  Upload the attachment and update the corresponding field in tm_task based on the attachmentType.
+ * @param data
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
 export function uploadAttachment (data) {
   return request({
     url: 'taskmanager/uploadAttachment',
@@ -41,6 +46,19 @@ export function uploadAttachment (data) {
       'Content-Type': 'multipart'
     },
     data
+  })
+}
+
+/**
+ * Get the processes list of particular task
+ * @param taskId
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
+export function fetchTaskProcessList (taskId) {
+  return request({
+    url: 'taskmanager/getTaskProcessList',
+    method: 'get',
+    params: {'taskId': taskId}
   })
 }
 

@@ -23,16 +23,20 @@ export type TaskInfo = {
   approveName: string | null;
   taskType: string;
   taskStatus: string;
-  docFile: string | null;
-  docArchiveDate: Date | null;
-  bankNotesFile: string | null;
-  bankNotesArchiveDate: Date | null;
-  selfExamFile: string | null;
-  selfExamArchiveDate: Date | null;
-  draftFile: string | null;
-  draftCreateDate: Date | null;
-  dirRejDate: Date | null;
-  dirRejCmnt: Date | null;
-  cliRejDate: Date | null;
-  cliRejCmnt: Date | null;
+  createDate: Date | null;
+}
+
+
+export type TaskProcess = {
+  processId: number | null;
+  taskId: number | null;
+  optDate: Date | null;
+  optBy: number | null;
+  optName: string | null;
+  taskStatusFrom: string;
+  taskStatusTo: string;
+  comment: string | null;
+  fileId: number | null;
+  fileName: string | null;
+  filePath: string | null;
 }

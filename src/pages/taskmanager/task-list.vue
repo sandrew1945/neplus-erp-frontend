@@ -167,7 +167,7 @@ const columns = [
   { name: 'clientType', label: '客户类型', field: 'clientType', type: 'fixcode', align: 'center', sortable: false },
   { name: 'taskType', label: '任务类型', field: 'taskType', type: 'fixcode', align: 'center', sortable: false },
   { name: 'taskStatus', label: '任务状态', field: 'taskStatus', type: 'fixcode', align: 'center', sortable: false },
-  { name: 'createDate', label: '创建日期', field: 'createDate', type: 'data', align: 'center', sortable: false },
+  { name: 'createDate', label: '创建日期', field: 'createDate', type: 'date', format: 'DD-MM-YYYY', align: 'center', sortable: false },
   { name: 'optName', label: '负责人', field: 'optName', type: 'data', align: 'center', sortable: false },
   { name: 'approveName', label: '审批人', field: 'approveName', type: 'data', align: 'center', sortable: false },
   { name: 'decDraftSendDate', label: '草稿发送日期', field: 'decDraftSendDate', type: 'date', format: 'DD-MM-YYYY', align: 'center', sortable: false },

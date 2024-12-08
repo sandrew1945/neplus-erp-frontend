@@ -71,7 +71,7 @@ const updateAvatar = (files) => {
     }
   }).then(res => {
     // this.avatarUrl = process.env.API + '/generate/loadImage?filePath=' + res.data
-    avatar.value = res.data
+    avatar.value = res
   })
 }
 
