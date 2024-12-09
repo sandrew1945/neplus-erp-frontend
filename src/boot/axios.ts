@@ -47,10 +47,10 @@ export default boot(async ({ app, router }) => {
       config.headers!['sid'] = Platform.is.electron ? getToken() || store.getToken : getToken()
     }
     // fromdata提交
-    // console.log(config.headers)
-    // console.log('config.method =====>' + config.method)
-    // console.log('config.contentType =====>' + config.headers['Content-Type'])
-    // console.log(config.data)
+    console.log(config.headers)
+    console.log('config.method =====>' + config.method)
+    console.log('config.contentType =====>' + config.headers['Content-Type'])
+    console.log(config.data)
     if (config.method === 'post' && config.headers!['Content-Type'] === 'multipart') {
       config.headers!['Content-Type'] = 'multipart/form-data'
     } else if (config.method === 'post' && config.headers!['Content-Type'] !== 'application/json') {

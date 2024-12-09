@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, computed, emit } from 'vue'
+import { defineProps, defineEmits, computed } from 'vue'
 
 const props = defineProps({
   position: {

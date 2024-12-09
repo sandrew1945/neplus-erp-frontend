@@ -41,7 +41,14 @@
           label="开始处理"
           icon="start"
           color="secondary"
-          @click="handleStart"
+          @click="handleProcess"
+        />
+        <q-btn
+          v-else-if="taskInfo.taskStatus === 20061002"
+          label="自审完成"
+          icon="check_circle"
+          color="secondary"
+          @click="handleProcess"
         />
         <q-btn
           label="返回"
@@ -166,6 +173,15 @@
 <!--        </div>-->
 <!--      </div>-->
     </div>
+    <ProcessHandleForm
+      v-model:model="showEditor"
+      :task-id="taskInfo.taskId"
+      :task-info="taskInfo"
+      :process-status="taskInfo.taskStatus"
+      :reset="resetRole"
+      :invoke="'refreshList'"
+      @refreshList="getTaskAndProcess"
+     />
   </q-page>
 </template>
 
@@ -178,6 +194,7 @@ import FixcodeSelect from 'components/FixcodeSelect/index.vue';
 import { date } from 'quasar';
 import { getfixCodeDesc } from 'src/utils/fixcode';
 import { useUserStore } from 'stores/user';
+import ProcessHandleForm from 'pages/taskmanager/components/ProcessHandleForm.vue';
 
 const taskId = ref(null)
 // const treeNodes = ref([])
@@ -194,10 +211,9 @@ const taskInfo = ref<TaskInfo>({
   taskStatus: '',
 })
 
+const showEditor = ref(false)
 const store = useUserStore();
-
 const taskProcess = ref<TaskProcess>([])
-
 const loadUrl = computed({
   get() {
     return process.env.API
@@ -208,9 +224,7 @@ const route = useRoute()
 // const router = useRouter()
 onBeforeMount(() => {
   taskId.value = route.params.id
-  getTaskInfo()
-  getTaskProcessList()
-  console.log(JSON.stringify(taskProcess.value))
+  getTaskAndProcess()
 })
 
 const getTaskInfo = () => {
@@ -228,7 +242,10 @@ const getTaskInfo = () => {
     taskInfo.value.createDate = response.data.createDate
   })
 }
-
+const getTaskAndProcess = () => {
+  getTaskInfo()
+  getTaskProcessList()
+}
 const getTaskProcessList = () => {
   fetchTaskProcessList(taskId.value).then(response => {
     console.log(response.data)
@@ -249,13 +266,8 @@ const fixcodeTranslate = (fixcode) => {
   return getfixCodeDesc(fixcode)
 }
 
-const handleStart = () => {
-  const params = { roleId: node.value.roleId, functionIds: functionIdArray }
-  saveSelectedFunc(params).then((response) => {
-    if (response.result === true) {
-      successNotify('Save Successfully')
-    }
-  })
+const handleProcess = () => {
+  showEditor.value = true
 }
 
 const router = useRouter()

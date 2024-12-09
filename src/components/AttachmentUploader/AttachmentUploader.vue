@@ -4,9 +4,10 @@
     v-model="filePath"
     :label="props.label"
     :factory="doUpdate"
+    dense
     field-name="file"
     accept=".jpg, image/*"
-    style="width: 200px"
+    :style="style"
   >
     <template v-slot:list="">
       <q-avatar rounded size="190px">
@@ -32,14 +33,10 @@ const props = defineProps({
     type: String,
     default: ''
   },
-  taskId: {
-    required: true,
-    type: Number || null,
-    default: null
-  },
-  attachmentType: {
-    required: true,
-    type: Number
+  style: {
+    required: false,
+    type: String,
+    default: 'width: 200px'
   },
   label: {
     required: false,
@@ -80,8 +77,6 @@ const doUpdate = (files) => {
       const formData = new FormData()
       formData.append('base64file', fileData)
       formData.append('filename', file.name)
-      formData.append('taskId', props.taskId)
-      formData.append('attachmentType', props.attachmentType)
       uploadAttachment(formData).then(res => {
         resolve(res)
       })

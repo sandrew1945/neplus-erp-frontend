@@ -62,3 +62,28 @@ export function fetchTaskProcessList (taskId) {
   })
 }
 
+/**
+ *  Start the particular task process.
+ * @param data
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
+export function makeTaskStart (data) {
+  return request({
+    url: 'taskmanager/makeTaskStart',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ *  Self approved the particular task process.
+ * @param data
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
+export function makeTaskSelfApproved (data) {
+  return request({
+    url: 'taskmanager/makeTaskSelfApproved',
+    method: 'post',
+    data
+  })
+}
