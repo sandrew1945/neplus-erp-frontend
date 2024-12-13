@@ -1,7 +1,7 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
 import { useUserStore } from 'src/stores/user';
-import { Platform } from 'quasar'
+import { Loading, Platform } from 'quasar';
 import { getToken } from 'src/utils/auth'
 import qs from 'qs'
 import { errorNotify } from 'src/utils/Notify'
@@ -38,6 +38,7 @@ export default boot(async ({ app, router }) => {
   const store = useUserStore()
   request.interceptors.request.use((config) => {
     /** In dev, intercepts request and logs it into console for dev */
+    Loading.show()
     const token = store.getToken || getToken()
     if (token) {
       // let each request carry token
@@ -47,10 +48,10 @@ export default boot(async ({ app, router }) => {
       config.headers!['sid'] = Platform.is.electron ? getToken() || store.getToken : getToken()
     }
     // fromdata提交
-    console.log(config.headers)
-    console.log('config.method =====>' + config.method)
-    console.log('config.contentType =====>' + config.headers['Content-Type'])
-    console.log(config.data)
+    // console.log(config.headers)
+    // console.log('config.method =====>' + config.method)
+    // console.log('config.contentType =====>' + config.headers['Content-Type'])
+    // console.log(config.data)
     if (config.method === 'post' && config.headers!['Content-Type'] === 'multipart') {
       config.headers!['Content-Type'] = 'multipart/form-data'
     } else if (config.method === 'post' && config.headers!['Content-Type'] !== 'application/json') {
@@ -63,6 +64,7 @@ export default boot(async ({ app, router }) => {
 });
 
 request.interceptors.response.use((response) => {
+  Loading.hide()
   const res = response.data
   // if the custom code is not 20000, it is judged as an error.
   if (res.result === false || res.result === 0) {

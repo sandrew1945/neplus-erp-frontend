@@ -87,3 +87,42 @@ export function makeTaskSelfApproved (data) {
     data
   })
 }
+
+/**
+ *  Update the task's status to manager approved.
+ * @param data
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
+export function makeTaskApproved (data) {
+  return request({
+    url: 'taskmanager/makeTaskApproved',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ *  Update the task's status to manager rejection.
+ * @param data
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
+export function makeTaskInnerReject (data) {
+  return request({
+    url: 'taskmanager/makeTaskInnerReject',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ *  Update the task's status to draft sent
+ * @param data
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
+export function makeTaskDraftSent (data) {
+  return request({
+    url: 'taskmanager/makeTaskDraftSent',
+    method: 'post',
+    data
+  })
+}

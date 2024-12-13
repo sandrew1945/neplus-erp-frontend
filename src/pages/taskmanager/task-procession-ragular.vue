@@ -36,20 +36,47 @@
           class="col-md-2 col-xs-4"
           model=""
         />
+        <template v-if="taskInfo.taskStatus === 20061001">
+          <q-btn
+
+            label="开始处理"
+            icon="start"
+            color="secondary"
+            @click="handleProcess"
+          />
+        </template>
+        <template v-else-if="taskInfo.taskStatus === 20061002">
+          <q-btn
+            label="自审完成"
+            icon="check_circle"
+            color="secondary"
+            @click="handleProcess"
+          />
+        </template>
+        <template v-else-if="taskInfo.taskStatus === 20061003">
         <q-btn
-          v-if="taskInfo.taskStatus === 20061001"
-          label="开始处理"
-          icon="start"
-          color="secondary"
+          label="审批"
+          icon="rule"
+          color="primary"
           @click="handleProcess"
         />
-        <q-btn
-          v-else-if="taskInfo.taskStatus === 20061002"
-          label="自审完成"
-          icon="check_circle"
-          color="secondary"
-          @click="handleProcess"
-        />
+        </template>
+        <template v-else-if="taskInfo.taskStatus === 20061004">
+          <q-btn
+            label="发送草稿"
+            icon="forward_to_inbox"
+            color="primary"
+            @click="handleProcess"
+          />
+        </template>
+        <template v-else-if="taskInfo.taskStatus === 20061006">
+          <q-btn
+            label="自审完成"
+            icon="check_circle"
+            color="primary"
+            @click="handleProcess"
+          />
+        </template>
         <q-btn
           label="返回"
           icon="reply"
@@ -58,7 +85,7 @@
         />
       </div>
       <div class="row q-gutter-md">
-        <q-timeline layout="loose" color="secondary">
+        <q-timeline layout="loose" color="primary">
           <q-timeline-entry heading>
             税务申报
           </q-timeline-entry>
@@ -80,7 +107,7 @@
               操作人: {{ tp.optName }}
             </div>
             <div>
-              备注: {{ tp.comment || '无' }}
+              备注: <span v-html = 'tp.comment ? tp.comment : "无"'></span>
             </div>
           </q-timeline-entry>
           <!--

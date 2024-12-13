@@ -57,7 +57,7 @@
             <div v-if="props.processStatus === 20061004" class="col-4">
               <AttachmentUploader
                 label="请上传"
-                :model="fileId"
+                v-model:model="fileId"
               />
             </div>
             <div :class="props.processStatus === 20061004 ? 'col-8' : 'col-12'">
@@ -78,28 +78,50 @@
             <q-btn
               label="自审完成"
               type="button"
+              icon="check_circle"
               color="primary"
               @click="handleSelfApproved"
             />
             </template>
             <template v-else-if="props.processStatus === 20061003">
+            <div class="row q-gutter-md">
             <q-btn
               label="通过"
+              icon="check_circle"
               type="button"
               color="primary"
-              @click="handleStart"
+              @click="handleApproved"
             />
             <q-btn
               label="驳回"
+              icon="swipe_left"
               type="button"
-              color="danger"
-              @click="handleStart"
+              color="negative"
+              @click="handleInnerReject"
             />
+            </div>
+            </template>
+            <template v-else-if="props.processStatus === 20061006">
+              <q-btn
+                label="自审完成"
+                type="button"
+                icon="check_circle"
+                color="primary"
+                @click="handleSelfApproved"
+              />
+            </template>
+            <template v-else-if="props.processStatus === 20061004">
+              <q-btn
+                label="发送草稿"
+                icon="forward_to_inbox"
+                color="primary"
+                @click="handleDraftSent"
+              />
             </template>
             <q-btn
               label="Reset"
               type="reset"
-              color="primary"
+              color="grey"
               flat
               class="q-ml-sm"
             />
@@ -116,7 +138,13 @@ import StickDialog from 'src/components/Dialog/StickDialog.vue'
 import { successNotify, warningNotify } from 'src/utils/Notify'
 import { computed, ref, nextTick } from 'vue';
 import AttachmentUploader from 'src/components/AttachmentUploader/AttachmentUploader.vue'
-import { makeTaskSelfApproved, makeTaskStart } from 'src/api/taskmanager';
+import {
+  makeTaskApproved,
+  makeTaskDraftSent,
+  makeTaskInnerReject,
+  makeTaskSelfApproved,
+  makeTaskStart
+} from 'src/api/taskmanager';
 
 const props = defineProps({
   model: {
@@ -151,6 +179,13 @@ const showDialog = computed({
 
 const taskInfo = defineModel('taskInfo')
 const processForm = ref(null)
+
+const clearForm = () => {
+  comment.value = null
+  fileId.value = null
+
+}
+
 const handleStart = () => {
   processForm.value.validate().then(success => {
     if (success) {
@@ -159,11 +194,12 @@ const handleStart = () => {
         nextTick(() => {
           // props.reset()
           showDialog.value = false
+          clearForm()
           emit(props.invoke)
         })
       })
     } else {
-      warningNotify('请完善角色信息')
+      warningNotify('请完善表单信息')
     }
   })
 }
@@ -175,11 +211,71 @@ const handleSelfApproved = () => {
         nextTick(() => {
           // props.reset()
           showDialog.value = false
+          clearForm()
           emit(props.invoke)
         })
       })
     } else {
-      warningNotify('请完善角色信息')
+      warningNotify('请完善表单信息')
+    }
+  })
+}
+
+const handleApproved = () => {
+  processForm.value.validate().then(success => {
+    if (success) {
+      makeTaskApproved({'taskId': props.taskId, 'comment': comment.value, 'fileId': fileId.value}).then(() => {
+        successNotify('Update Successfully')
+        nextTick(() => {
+          // props.reset()
+          showDialog.value = false
+          clearForm()
+          emit(props.invoke)
+        })
+      })
+    } else {
+      warningNotify('请完善表单信息')
+    }
+  })
+}
+
+const handleInnerReject = () => {
+  processForm.value.validate().then(success => {
+    if (success) {
+      makeTaskInnerReject({'taskId': props.taskId, 'comment': comment.value, 'fileId': fileId.value}).then(() => {
+        successNotify('Update Successfully')
+        nextTick(() => {
+          // props.reset()
+          showDialog.value = false
+          clearForm()
+          emit(props.invoke)
+        })
+      })
+    } else {
+      warningNotify('请完善表单信息')
+    }
+  })
+}
+
+const handleDraftSent = () => {
+  processForm.value.validate().then(success => {
+    if (success) {
+      if (!fileId.value)
+      {
+        warningNotify('请上传申报单草稿')
+        return
+      }
+      makeTaskDraftSent({'taskId': props.taskId, 'comment': comment.value, 'fileId': fileId.value}).then(() => {
+        successNotify('Update Successfully')
+        nextTick(() => {
+          // props.reset()
+          showDialog.value = false
+          clearForm()
+          emit(props.invoke)
+        })
+      })
+    } else {
+      warningNotify('请完善表单信息')
     }
   })
 }
