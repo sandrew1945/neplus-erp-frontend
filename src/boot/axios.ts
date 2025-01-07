@@ -55,7 +55,7 @@ export default boot(async ({ app, router }) => {
     if (config.method === 'post' && config.headers!['Content-Type'] === 'multipart') {
       config.headers!['Content-Type'] = 'multipart/form-data'
     } else if (config.method === 'post' && config.headers!['Content-Type'] !== 'application/json') {
-      config.data = qs.stringify(config.data)
+      config.data = qs.stringify(config.data, { arrayFormat: 'repeat' })
     }
     return config
 }, (error) => {
@@ -76,17 +76,20 @@ request.interceptors.response.use((response) => {
 }, (error) => {
 
 // errorNotify(error.message)
+  console.error('error.response.status =======>' + error.response.status)
   if (error.response.status === 401) {
+    console.error('<=========== in error.response.status =======>')
     // router.push({ path: '/login' })
     store.resetToken()
     store.setCode('')
-    store.setRole('')
+    store.clearLocalRole()
     store.setRoles([])
     // store.dispatch('user/resetToken')
     // store.dispatch('user/setCode', '')
     // store.dispatch('user/setRole', '')
     // store.dispatch('user/setRoles', [])
-    router.push('/')
+    router.push('/login')
+    Loading.hide()
   }
   return Promise.reject(error)
 });

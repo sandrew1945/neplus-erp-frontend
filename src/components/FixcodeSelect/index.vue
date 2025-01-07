@@ -3,6 +3,7 @@
     v-if="!clearable"
     :dense="dense"
     outlined
+    :multiple="multiple"
     v-model="selectedItem"
     :options="options"
     map-options
@@ -17,6 +18,7 @@
     v-else
     :dense="dense"
     outlined
+    :multiple="multiple"
     v-model="selectedItem"
     :options="options"
     map-options
@@ -75,6 +77,11 @@ const props = defineProps({
   dense: {
     required: false,
     type: Boolean
+  },
+  multiple: {
+    required: false,
+    type: Boolean,
+    default: false
   }
 })
 

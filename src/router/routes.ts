@@ -22,6 +22,19 @@ const routes: RouteRecordRaw[] = [
     // hidden: true
   },
   {
+    path: '/profile',
+    component: () => import('layouts/MainLayout.vue'),
+    meta: { hideen: true},
+    children: [
+      {
+        path: '/',
+        name: 'Profile',
+        alias: '',
+        component: () => import('pages/profile/Profile.vue')
+      }
+    ]
+  },
+  {
     path: '/index',
     alias: '/',
     component: () => import('layouts/MainLayout.vue'),

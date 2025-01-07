@@ -54,13 +54,16 @@
             />
           </div>
           <div class="row justify-between">
-            <div v-if="props.processStatus === 20061004" class="col-4">
+            <div v-if="props.processStatus === 20061004 || props.processStatus === 20061007" class="col-4">
               <AttachmentUploader
                 label="请上传"
                 v-model:model="fileId"
               />
             </div>
-            <div :class="props.processStatus === 20061004 ? 'col-8' : 'col-12'">
+            <div v-if="props.processStatus === 20061004 || props.processStatus === 20061007" class="col-8">
+              <q-editor v-model="emailContent" placeholder="请输入邮件内容" min-height="15rem" />
+            </div>
+            <div v-else :class="props.processStatus === 20061004 || props.processStatus === 20061007 ? 'col-8' : 'col-12'">
               <q-editor v-model="comment" placeholder="请输入意见" min-height="15rem" />
             </div>
           </div>
@@ -101,6 +104,32 @@
             />
             </div>
             </template>
+            <template v-else-if="props.processStatus === 20061004">
+              <q-btn
+                label="发送草稿"
+                icon="forward_to_inbox"
+                color="primary"
+                @click="handleDraftSent"
+              />
+            </template>
+            <template v-else-if="props.processStatus === 20061005">
+              <div class="row q-gutter-md">
+                <q-btn
+                  label="客户确认"
+                  icon="mark_chat_read"
+                  type="button"
+                  color="primary"
+                  @click="clientApproved"
+                />
+                <q-btn
+                  label="客户修改"
+                  icon="cancel_presentation"
+                  type="button"
+                  color="negative"
+                  @click="clientReject"
+                />
+              </div>
+            </template>
             <template v-else-if="props.processStatus === 20061006">
               <q-btn
                 label="自审完成"
@@ -110,12 +139,22 @@
                 @click="handleSelfApproved"
               />
             </template>
-            <template v-else-if="props.processStatus === 20061004">
+            <template v-else-if="props.processStatus === 20061007">
               <q-btn
-                label="发送草稿"
-                icon="forward_to_inbox"
+                label="申报"
+                type="button"
+                icon="cloud_upload"
                 color="primary"
-                @click="handleDraftSent"
+                @click="handleDeclaration"
+              />
+            </template>
+            <template v-else-if="props.processStatus === 20061008">
+              <q-btn
+                label="重新处理"
+                type="button"
+                icon="move_up"
+                color="primary"
+                @click="handleSelfApproved"
               />
             </template>
             <q-btn
@@ -139,12 +178,14 @@ import { successNotify, warningNotify } from 'src/utils/Notify'
 import { computed, ref, nextTick } from 'vue';
 import AttachmentUploader from 'src/components/AttachmentUploader/AttachmentUploader.vue'
 import {
-  makeTaskApproved,
+  makeClientApprove, makeClientReject,
+  makeTaskApproved, makeTaskDeclaration,
   makeTaskDraftSent,
   makeTaskInnerReject,
   makeTaskSelfApproved,
   makeTaskStart
 } from 'src/api/taskmanager';
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
   model: {
@@ -165,8 +206,9 @@ const props = defineProps({
     type: Number,
   }
 })
-const fileId = ref<number>(null)
-const comment = ref<string>(null)
+const fileId = ref<number|null>(null)
+const comment = ref<string|null>(null)
+const emailContent = ref<string|null>(null)
 const emit = defineEmits(['update:model', 'refreshList'])
 const showDialog = computed({
   get() {
@@ -178,6 +220,7 @@ const showDialog = computed({
 })
 
 const taskInfo = defineModel('taskInfo')
+const optType = defineModel('optType')
 const processForm = ref(null)
 
 const clearForm = () => {
@@ -186,6 +229,7 @@ const clearForm = () => {
 
 }
 
+const router = useRouter()
 const handleStart = () => {
   processForm.value.validate().then(success => {
     if (success) {
@@ -195,7 +239,7 @@ const handleStart = () => {
           // props.reset()
           showDialog.value = false
           clearForm()
-          emit(props.invoke)
+          returnBack()
         })
       })
     } else {
@@ -212,7 +256,7 @@ const handleSelfApproved = () => {
           // props.reset()
           showDialog.value = false
           clearForm()
-          emit(props.invoke)
+          returnBack()
         })
       })
     } else {
@@ -220,7 +264,9 @@ const handleSelfApproved = () => {
     }
   })
 }
-
+/**
+ *  Handle inner approved by manager
+ */
 const handleApproved = () => {
   processForm.value.validate().then(success => {
     if (success) {
@@ -230,7 +276,8 @@ const handleApproved = () => {
           // props.reset()
           showDialog.value = false
           clearForm()
-          emit(props.invoke)
+          // emit(props.invoke)
+          returnBack()
         })
       })
     } else {
@@ -238,7 +285,9 @@ const handleApproved = () => {
     }
   })
 }
-
+/**
+ *  Handle inner reject by manager
+ */
 const handleInnerReject = () => {
   processForm.value.validate().then(success => {
     if (success) {
@@ -248,7 +297,7 @@ const handleInnerReject = () => {
           // props.reset()
           showDialog.value = false
           clearForm()
-          emit(props.invoke)
+          returnBack()
         })
       })
     } else {
@@ -265,18 +314,90 @@ const handleDraftSent = () => {
         warningNotify('请上传申报单草稿')
         return
       }
-      makeTaskDraftSent({'taskId': props.taskId, 'comment': comment.value, 'fileId': fileId.value}).then(() => {
+      makeTaskDraftSent({'taskId': props.taskId, 'emailContent': emailContent.value, 'fileId': fileId.value}).then(() => {
         successNotify('Update Successfully')
         nextTick(() => {
           // props.reset()
           showDialog.value = false
           clearForm()
-          emit(props.invoke)
+          returnBack()
         })
       })
     } else {
       warningNotify('请完善表单信息')
     }
   })
+}
+
+/**
+ *  Handle inner approved by manager
+ */
+const clientApproved = () => {
+  processForm.value.validate().then(success => {
+    if (success) {
+      makeClientApprove({'taskId': props.taskId, 'comment': comment.value, 'fileId': fileId.value}).then(() => {
+        successNotify('Update Successfully')
+        nextTick(() => {
+          // props.reset()
+          showDialog.value = false
+          clearForm()
+          // emit(props.invoke)
+          returnBack()
+        })
+      })
+    } else {
+      warningNotify('请完善表单信息')
+    }
+  })
+}
+/**
+ *  Handle inner reject by manager
+ */
+const clientReject = () => {
+  processForm.value.validate().then(success => {
+    if (success) {
+      makeClientReject({'taskId': props.taskId, 'comment': comment.value, 'fileId': fileId.value}).then(() => {
+        successNotify('Update Successfully')
+        nextTick(() => {
+          // props.reset()
+          showDialog.value = false
+          clearForm()
+          // emit(props.invoke)
+          returnBack()
+        })
+      })
+    } else {
+      warningNotify('请完善表单信息')
+    }
+  })
+}
+
+const handleDeclaration = () => {
+  processForm.value.validate().then(success => {
+    if (success) {
+      makeTaskDeclaration({'taskId': props.taskId, 'comment': comment.value, 'fileId': fileId.value}).then(() => {
+        successNotify('Update Successfully')
+        nextTick(() => {
+          // props.reset()
+          showDialog.value = false
+          clearForm()
+          // emit(props.invoke)
+          returnBack()
+        })
+      })
+    } else {
+      warningNotify('请完善表单信息')
+    }
+  })
+}
+
+
+const returnBack = () => {
+  if (optType.value === 'handle') {
+    router.push('/task/list')
+  }
+  else {
+    router.push('/task/approve')
+  }
 }
 </script>

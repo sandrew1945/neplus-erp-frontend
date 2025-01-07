@@ -126,3 +126,40 @@ export function makeTaskDraftSent (data) {
     data
   })
 }
+/**
+ *  Update the task's status to client approved.
+ * @param data
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
+export function makeClientApprove (data) {
+  return request({
+    url: 'taskmanager/makeClientApproved',
+    method: 'post',
+    data
+  })
+}
+/**
+ *  Update the task's status to client rejection.
+ * @param data
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
+export function makeClientReject (data) {
+  return request({
+    url: 'taskmanager/makeClientReject',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * Update the task's status to declaration.
+ * @param data
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ */
+export function makeTaskDeclaration (data) {
+  return request({
+    url: 'taskmanager/makeTaskDeclaration',
+    method: 'post',
+    data
+  })
+}

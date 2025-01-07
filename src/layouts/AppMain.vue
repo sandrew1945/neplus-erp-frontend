@@ -68,6 +68,7 @@
         <q-fab-action
           color="primary"
           icon="equalizer"
+          @click="profile"
         >
           <q-tooltip
             anchor="center left"
@@ -109,6 +110,10 @@ const logout = async() => {
 const reSelectRole = () => {
   store.resetSelectedRole()
   router.push('/role')
+}
+
+const profile = () => {
+  router.push('/profile')
 }
 
 const handleStickyMove = (evt) => {

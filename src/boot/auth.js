@@ -43,8 +43,8 @@ export default async ({ router }) => {
               LoadingBar.stop()
             } else if (store.getRoles.length === 1) {
               const roleId = store.getRoles['0'].roleId
-              store.setRole(roleId)
-              await store.getMenu(roleId)
+              store.setRole(roleId).catch(error => console.error(error))
+              // await store.getMenu(roleId)
               store.getMenu(roleId).then(response => {
 
                 // const routers = rFormat(response)

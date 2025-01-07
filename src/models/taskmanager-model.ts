@@ -3,18 +3,19 @@
 export type TaskListQuery = {
     curPage: number;
     limit: number;
-    clientName: string | null;
+    // clientName: string | null;
+    taskName: string | null;
     clientType: string;
     taskType: string;
-    dateRange: object,
     startFrom: string | null;
     endWith: string | null;
-    taskStatus: string;
+    taskStatus: [];
 }
 
 export type TaskInfo = {
   taskId: number | null;
   clientName: string | null;
+  taskName: string | null;
   clientType: string;
   clientEmail: string | null;
   clientMobile: string | null;

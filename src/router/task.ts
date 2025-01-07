@@ -18,15 +18,22 @@ const taskRouter: RouteRecordRaw = {
         meta: { title: '任务管理', icon: 'thumb_up' },
         children: [
           {
-            path: 'manager',
+            path: 'list',
             name: 'tasklist',
             component: () => import('pages/taskmanager/task-list.vue'),
             meta: { title: '客户管理', icon: 'thumb_up' }
           },
           {
-            path: 'process/:id',
+            path: 'process/:id/:type',
             name: 'Process',
             component: () => import('pages/taskmanager/task-procession-ragular.vue'),
+            meta: { hidden: true }
+            // hidden: true
+          },
+          {
+            path: 'approve',
+            name: 'taskApprove',
+            component: () => import('pages/taskmanager/task-approve.vue'),
             meta: { hidden: true }
             // hidden: true
           }

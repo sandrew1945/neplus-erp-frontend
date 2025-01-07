@@ -153,9 +153,9 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, computed, watch, ref, nextTick } from 'vue'
-import FixcodeSelect from 'src/components/FixcodeSelect'
-import StickDialog from 'src/components/Dialog/StickDialog'
-import AvatarUploader from 'src/components/avatarUploader/index'
+import FixcodeSelect from 'src/components/FixcodeSelect/index.vue'
+import StickDialog from 'src/components/Dialog/StickDialog.vue'
+import AvatarUploader from 'src/components/avatarUploader/index.vue'
 import { createUser, updateUserInfo, userValidate } from 'src/api/usermanager'
 import { successNotify, warningNotify } from 'src/utils/Notify'
 

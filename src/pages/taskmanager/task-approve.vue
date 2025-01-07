@@ -1,7 +1,7 @@
 <template>
   <q-page :class="$q.dark.isActive ? 'column bg-dark' : 'column bg-white'">
     <div class="col-2 q-ma-lg q-gutter-md">
-      <div class="row q-gutter-md items-start">
+      <div class="q-gutter-md row items-start">
         <n-container :sm="10" :mid="2" :lg="2">
           <q-input
             dense
@@ -29,15 +29,6 @@
           />
         </n-container>
         <n-container :sm="10" :mid="2" :lg="2">
-          <FixcodeSelect
-            :fixcodetype="'2006'"
-            multiple
-            v-model:model="listQuery.taskStatus"
-            placeholder="任务状态"
-            dense
-          />
-        </n-container>
-        <n-container :sm="10" :mid="2" :lg="2">
           <q-input dense filled readonly :model-value="`${dateRange.from ? dateRange.from : 'dd-mm-yyyy'} to ${dateRange.to ? dateRange.to : 'dd-mm-yyyy'}`">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
@@ -54,6 +45,7 @@
         </n-container>
         <q-btn label="查询" :loading="listLoading" icon="search" color="primary" @click="handleFilter" />
       </div>
+
     </div>
     <div class="col-10 q-ma-lg">
       <PaginationTable
@@ -66,71 +58,29 @@
       >
         <template v-if="$q.screen.gt.xs" v-slot:default="row">
           <q-td width="300px">
-            <div class="row justify-around q-gutter-x-md">
+            <div class="row q-mx-md q-gutter-x-md">
               <q-btn
-                v-if="store.getRoleType === 20041003 && row.row.taskStatus !== 20061003"
                 class="col-10"
                 color="primary"
                 padding="xs"
                 size="sm"
                 dense
-                label="处理"
-                icon="format_list_bulleted"
+                label="审批"
+                icon="free_cancellation"
                 @click="handleProcess(row.row.taskId)"
-              />
-              <q-btn
-                v-if="store.getRoleType !== 20041003"
-                :class="store.getId === row.row.approveId ? 'col-4' : 'col-10'"
-                color="secondary"
-                padding="xs"
-                size="sm"
-                dense
-                label="查看"
-                icon="search"
-                @click="handleView(row.row.taskId)"
-              />
-              <q-btn
-                v-if="store.getRoleType !== 20041003 && store.getId === row.row.approveId"
-                :class="store.getId === row.row.approveId ? 'col-4' : 'col-10'"
-                color="negative"
-                padding="xs"
-                size="sm"
-                dense
-                label="删除"
-                icon="delete"
-                @click="handleDelete(row.row.taskId)"
               />
             </div>
           </q-td>
         </template>
         <template v-else v-slot:default="row">
-          <div class="row justify-around">
+          <div class="row q-mx-md q-gutter-x-md">
             <q-btn
-              v-if="store.getRoleType === 20041003 && row.row.taskStatus !== 20061003"
               class="col-10"
               round
-              color="secondary"
+              color="primary"
               size="xs"
-              icon="search"
+              icon="free_cancellation"
               @click="handleProcess(row.row.taskId)"
-            />
-            <q-btn
-              v-if="store.getRoleType !== 20041003"
-              class="col-10"
-              round
-              color="secondary"
-              size="xs"
-              icon="search"
-              @click="handleView(row.row.taskId)"
-            />
-            <q-btn
-              v-if="store.getRoleType !== 20041003 && store.getId === row.row.approveId"
-              class="col-10"
-              round
-              color="negative"
-              size="xs"
-              icon="delete"
-              @click="handleDelete(row.row.taskId)"
             />
           </div>
         </template>
@@ -143,23 +93,15 @@
 import { ref, onBeforeMount } from 'vue';
 import PaginationTable from 'src/components/PaginationTable/index.vue';
 import FixcodeSelect from 'src/components/FixcodeSelect/index.vue';
-import { successNotify } from 'src/utils/Notify';
-import { confirm } from 'src/utils/Confirm';
 import NContainer from 'src/components/NContainer/index.vue';
 import { PageInfo } from 'src/models/generic-model';
-import { useUserStore } from 'stores/user';
 import { TaskListQuery } from 'src/models/taskmanager-model';
-import { deleteTask, getTaskList } from 'src/api/taskmanager';
+import { getTaskList } from 'src/api/taskmanager';
 import { useRouter } from 'vue-router';
 
-const store = useUserStore();
 const list = ref([]);
 const listLoading = ref(false);
 const dateRange = ref({from: '', to: ''})
-
-// const page = ref(1)
-// const pageSize = ref(process.env.PAGESIZE)
-// const rowsNumber = ref(0)
 const listQuery = ref<TaskListQuery>({
   curPage: 1,
   limit: 20,
@@ -168,7 +110,7 @@ const listQuery = ref<TaskListQuery>({
   taskType: '',
   startFrom: null,
   endWith: null,
-  taskStatus: [],
+  taskStatus: ['20061003'],
 });
 const pagination = ref<PageInfo>({
   sortBy: 'desc',
@@ -213,34 +155,13 @@ const handleFilter = () => {
   getList();
 };
 
-const handleDelete = (taskId: number) => {
-  confirm('注意', '是否删除该任务？', () => {
-    const param = { taskId: taskId };
-    deleteTask(param).then((res) => {
-      if (res.data === true) {
-        successNotify('Delete Successfully');
-        handleFilter();
-      }
-    });
-  });
-};
-
 const router = useRouter()
 const handleProcess = async (taskId: number) => {
   router.push({
     name: 'Process',
     params: {
       id: taskId,
-      type: 'handle'
-    }
-  })
-};
-const handleView = async (taskId: number) => {
-  router.push({
-    name: 'Process',
-    params: {
-      id: taskId,
-      type: 'view'
+      type: 'approve'
     }
   })
 };

@@ -36,46 +36,72 @@
           class="col-md-2 col-xs-4"
           model=""
         />
-        <template v-if="taskInfo.taskStatus === 20061001">
-          <q-btn
+        <template v-if="optType !== 'view'">
+          <template v-if="taskInfo.taskStatus === 20061001">
+            <q-btn
 
-            label="开始处理"
-            icon="start"
-            color="secondary"
-            @click="handleProcess"
-          />
-        </template>
-        <template v-else-if="taskInfo.taskStatus === 20061002">
+              label="开始处理"
+              icon="start"
+              color="secondary"
+              @click="handleProcess"
+            />
+          </template>
+          <template v-else-if="taskInfo.taskStatus === 20061002">
+            <q-btn
+              label="自审完成"
+              icon="check_circle"
+              color="secondary"
+              @click="handleProcess"
+            />
+          </template>
+          <template v-else-if="taskInfo.taskStatus === 20061003">
           <q-btn
-            label="自审完成"
-            icon="check_circle"
-            color="secondary"
-            @click="handleProcess"
-          />
-        </template>
-        <template v-else-if="taskInfo.taskStatus === 20061003">
-        <q-btn
-          label="审批"
-          icon="rule"
-          color="primary"
-          @click="handleProcess"
-        />
-        </template>
-        <template v-else-if="taskInfo.taskStatus === 20061004">
-          <q-btn
-            label="发送草稿"
-            icon="forward_to_inbox"
+            label="审批"
+            icon="rule"
             color="primary"
             @click="handleProcess"
           />
-        </template>
-        <template v-else-if="taskInfo.taskStatus === 20061006">
-          <q-btn
-            label="自审完成"
-            icon="check_circle"
-            color="primary"
-            @click="handleProcess"
-          />
+          </template>
+          <template v-else-if="taskInfo.taskStatus === 20061004">
+            <q-btn
+              label="发送草稿"
+              icon="forward_to_inbox"
+              color="primary"
+              @click="handleProcess"
+            />
+          </template>
+          <template v-else-if="taskInfo.taskStatus === 20061005">
+            <q-btn
+              label="客户确认结果录入"
+              icon="live_help"
+              color="primary"
+              @click="handleProcess"
+            />
+          </template>
+          <template v-else-if="taskInfo.taskStatus === 20061006">
+            <q-btn
+              label="自审完成"
+              icon="check_circle"
+              color="primary"
+              @click="handleProcess"
+            />
+          </template>
+          <template v-else-if="taskInfo.taskStatus === 20061007">
+            <q-btn
+              label="申报"
+              icon="cloud_upload"
+              color="primary"
+              @click="handleProcess"
+            />
+          </template>
+          <template v-else-if="taskInfo.taskStatus === 20061008">
+            <q-btn
+              label="重新处理"
+              icon="move_up"
+              color="primary"
+              @click="handleProcess"
+            />
+          </template>
         </template>
         <q-btn
           label="返回"
@@ -87,7 +113,7 @@
       <div class="row q-gutter-md">
         <q-timeline layout="loose" color="primary">
           <q-timeline-entry heading>
-            税务申报
+            {{ taskInfo.taskName }}
           </q-timeline-entry>
           <q-timeline-entry
             title="任务创建"
@@ -97,88 +123,22 @@
           </q-timeline-entry>
           <q-timeline-entry
             v-for="tp in taskProcess"
-            :key="tp.processId"
-            :side="tp.optBy === store.getId ? 'right' : 'left'"
-            :title="fixcodeTranslate(tp.taskStatusTo)"
-            :subtitle="dateFormatter(tp.optDate)"
-            :avatar="loadUrl + `generate/loadImage?filePath=${tp.avatar}`"
+            :key="tp?.processId"
+            :side="tp?.optBy === store.getId ? 'right' : 'left'"
+            :title="fixcodeTranslate(tp?.taskStatusTo)"
+            :subtitle="dateFormatter(tp?.optDate)"
+            :avatar="loadUrl + `generate/loadImage?filePath=${tp?.avatar}`"
           >
             <div>
-              操作人: {{ tp.optName }}
+              操作人: {{ tp?.optName }}
             </div>
-            <div>
-              备注: <span v-html = 'tp.comment ? tp.comment : "无"'></span>
+            <div v-if="!tp?.fileId">
+              备注: <span v-html = 'tp?.comment ? tp?.comment : "无"'></span>
             </div>
-          </q-timeline-entry>
-          <!--
-          <q-timeline-entry
-            title="账务处理"
-            subtitle="01/12/2024"
-          >
-            <div>
-              备注: 无
+            <div v-else>
+              附件 : <a :href="downloadPath + tp?.filePath + '&actualFileName=' + tp?.fileName">{{ tp?.fileName }}</a>
             </div>
           </q-timeline-entry>
-
-          <q-timeline-entry
-            title="自审完成"
-            subtitle="12/12/2024"
-            icon="delete"
-          >
-            <div>
-              备注: 无
-            </div>
-          </q-timeline-entry>
-          <q-timeline-entry
-            title="内部驳回"
-            side="left"
-            subtitle="14/12/2024"
-            avatar="https://cdn.quasar.dev/img/avatar2.jpg"
-          >
-            <div>
-              备注: 客户资料有更新
-            </div>
-          </q-timeline-entry>
-
-          <q-timeline-entry
-            title="自审完成"
-            subtitle="15/12/2024"
-          >
-            <div>
-              备注: 已根据客户最新资料进行修改
-            </div>
-          </q-timeline-entry>
-
-          <q-timeline-entry
-            title="审批通过"
-            subtitle="16/12/2024"
-            color="orange"
-            side="left"
-            icon="done_all"
-          >
-            <div>
-              备注: 无
-            </div>
-          </q-timeline-entry>
-
-          <q-timeline-entry
-            title="草稿发送"
-            subtitle="17/12/2024"
-          >
-            <div>
-              备注: 无
-            </div>
-          </q-timeline-entry>
-
-          <q-timeline-entry
-            title="等待申报"
-            subtitle="24/12/20246"
-          >
-            <div>
-              备注: 无
-            </div>
-          </q-timeline-entry>
-          -->
         </q-timeline>
       </div>
 <!--      <div class="row q-gutter-md">-->
@@ -204,6 +164,7 @@
       v-model:model="showEditor"
       :task-id="taskInfo.taskId"
       :task-info="taskInfo"
+      :opt-type="optType"
       :process-status="taskInfo.taskStatus"
       :reset="resetRole"
       :invoke="'refreshList'"
@@ -224,9 +185,11 @@ import { useUserStore } from 'stores/user';
 import ProcessHandleForm from 'pages/taskmanager/components/ProcessHandleForm.vue';
 
 const taskId = ref(null)
-// const treeNodes = ref([])
+const optType = ref('')
+const downloadPath = ref('')
 const taskInfo = ref<TaskInfo>({
   taskId: null,
+  taskName: null,
   clientName: null,
   clientType: '',
   clientEmail: null,
@@ -236,6 +199,7 @@ const taskInfo = ref<TaskInfo>({
   approveName: null,
   taskType: '',
   taskStatus: '',
+  createDate: null,
 })
 
 const showEditor = ref(false)
@@ -250,7 +214,9 @@ const loadUrl = computed({
 const route = useRoute()
 // const router = useRouter()
 onBeforeMount(() => {
+  downloadPath.value = process.env.API + 'generate/streamingDownload?filePath='
   taskId.value = route.params.id
+  optType.value = route.params.type
   getTaskAndProcess()
 })
 
@@ -267,6 +233,7 @@ const getTaskInfo = () => {
     taskInfo.value.taskType = '' + response.data.taskType
     taskInfo.value.taskStatus = response.data.taskStatus
     taskInfo.value.createDate = response.data.createDate
+    taskInfo.value.taskName = response.data.taskName
   })
 }
 const getTaskAndProcess = () => {
@@ -299,7 +266,7 @@ const handleProcess = () => {
 
 const router = useRouter()
 const cancel = () => {
-  router.back(-1)
+  router.back()
 }
 
 </script>

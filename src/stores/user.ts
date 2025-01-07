@@ -57,6 +57,12 @@ export const useUserStore = defineStore('user', {
     setName(name: string) {
       this.name = name
     },
+    clearLocalRole() {
+      this.roleId = ''
+      this.roleName = ''
+      this.roleCode = ''
+      this.roleType = ''
+    },
     setRole(role: string) {
       return new Promise((resolve, reject) => {
         setUserRoleInfo({'roleId': role}).then(response => {
