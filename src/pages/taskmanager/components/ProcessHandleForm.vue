@@ -43,14 +43,26 @@
           @reset="reset"
           class="q-gutter-md"
         >
-          <div class="row" v-if="props.processStatus === 20061004 || props.processStatus === 20061007">
+          <div class="row justify-between q-gutter-xs" v-if="props.processStatus === 20061004 || props.processStatus === 20061007">
             <q-input
               dense
               outlined
               v-model="taskInfo.clientEmail"
               readonly
               label="客户邮箱"
-              class="col-md-12 col-xs-12"
+              class="col-md-5 col-xs-12"
+            />
+            <q-select
+              dense
+              outlined
+              v-model="emailContent"
+              :options="mailTemplate"
+              option-value="templateContent"
+              option-label="templateName"
+              emit-value
+              map-options
+              label="选择邮件模版"
+              class="col-md-5 col-xs-12"
             />
           </div>
           <div class="row justify-between">
@@ -221,8 +233,8 @@ const showDialog = computed({
 
 const taskInfo = defineModel('taskInfo')
 const optType = defineModel('optType')
+const mailTemplate = defineModel('mailTemplate')
 const processForm = ref(null)
-
 const clearForm = () => {
   comment.value = null
   fileId.value = null

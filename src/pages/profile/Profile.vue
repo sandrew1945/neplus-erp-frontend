@@ -89,6 +89,22 @@
               v-model="userInfo.email"
               label="电子邮件"
             />
+<!--            <q-input-->
+<!--              outlined-->
+<!--              dense-->
+<!--              type="password"-->
+<!--              v-model="userInfo.emailToken"-->
+<!--              label="邮件Token"-->
+<!--            />-->
+            <q-input v-model="userInfo.emailToken" outlined dense :type="isPwd ? 'password' : 'text'" label="邮件Token" hint="Password with toggle">
+              <template v-slot:append>
+                <q-icon
+                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPwd = !isPwd"
+                />
+              </template>
+            </q-input>
             <div>
               <q-btn
                 label="Update"
@@ -115,6 +131,7 @@ import { useUserStore } from 'stores/user';
 import { UserInfo } from 'src/models/usermanager-model';
 
 const avatarUrl = ref('')
+const isPwd = ref(true)
 avatarUrl.value = process.env.API + 'generate/loadImage?filePath='
 const userInfo = ref<UserInfo>({
   userId: '',
@@ -127,7 +144,8 @@ const userInfo = ref<UserInfo>({
   sex: '',
   birthday: '',
   avatar: '',
-  userStatus: ''
+  userStatus: '',
+  emailToken: ''
 })
 
 const store = useUserStore()
@@ -148,6 +166,7 @@ onBeforeMount(async () => {
     userInfo.value.birthday = birthday
     userInfo.value.avatar = res.data.avatar
     userInfo.value.userStatus = '' + res.data.userStatus
+    userInfo.value.emailToken = res.data.emailToken
   })
 })
 

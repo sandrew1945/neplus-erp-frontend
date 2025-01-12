@@ -63,3 +63,10 @@ export function deleteMailTemplate (data) {
     data
   })
 }
+
+export function getAllMailTemplates () {
+  return request({
+    url: 'mailmanager/getAllMailTemplate',
+    method: 'get'
+  })
+}

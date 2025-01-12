@@ -18,4 +18,5 @@ export type UserInfo = {
     birthday: string;
     avatar: string;
     userStatus: string;
+    emailToken: string | null;
 }

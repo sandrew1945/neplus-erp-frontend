@@ -166,7 +166,7 @@
       :task-info="taskInfo"
       :opt-type="optType"
       :process-status="taskInfo.taskStatus"
-      :reset="resetRole"
+      :mail-template="mailTemplate"
       :invoke="'refreshList'"
       @refreshList="getTaskAndProcess"
      />
@@ -183,6 +183,8 @@ import { date } from 'quasar';
 import { getfixCodeDesc } from 'src/utils/fixcode';
 import { useUserStore } from 'stores/user';
 import ProcessHandleForm from 'pages/taskmanager/components/ProcessHandleForm.vue';
+import { MailTemplateInfo } from 'src/models/mailmanager-model';
+import { getAllMailTemplates } from 'src/api/mailmanager';
 
 const taskId = ref(null)
 const optType = ref('')
@@ -201,7 +203,6 @@ const taskInfo = ref<TaskInfo>({
   taskStatus: '',
   createDate: null,
 })
-
 const showEditor = ref(false)
 const store = useUserStore();
 const taskProcess = ref<TaskProcess>([])
@@ -210,7 +211,7 @@ const loadUrl = computed({
     return process.env.API
   }
 })
-
+const mailTemplate = ref<MailTemplateInfo[]>([])
 const route = useRoute()
 // const router = useRouter()
 onBeforeMount(() => {
@@ -218,6 +219,7 @@ onBeforeMount(() => {
   taskId.value = route.params.id
   optType.value = route.params.type
   getTaskAndProcess()
+  getAllMailTemplate()
 })
 
 const getTaskInfo = () => {
@@ -242,8 +244,12 @@ const getTaskAndProcess = () => {
 }
 const getTaskProcessList = () => {
   fetchTaskProcessList(taskId.value).then(response => {
-    console.log(response.data)
     taskProcess.value = response.data
+  })
+}
+const getAllMailTemplate = () => {
+  getAllMailTemplates().then(response => {
+    mailTemplate.value = response.data
   })
 }
 const dateFormatter = (val, format) => {
