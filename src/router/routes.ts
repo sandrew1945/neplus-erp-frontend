@@ -2,6 +2,7 @@ import { RouteRecordRaw } from 'vue-router';
 import permissionRouter from './premission'
 import clientRouter from './client'
 import taskRouter from './task'
+import mail from './mail';
 
 const routes: RouteRecordRaw[] = [
   // {
@@ -22,19 +23,6 @@ const routes: RouteRecordRaw[] = [
     // hidden: true
   },
   {
-    path: '/profile',
-    component: () => import('layouts/MainLayout.vue'),
-    meta: { hideen: true},
-    children: [
-      {
-        path: '/',
-        name: 'Profile',
-        alias: '',
-        component: () => import('pages/profile/Profile.vue')
-      }
-    ]
-  },
-  {
     path: '/index',
     alias: '/',
     component: () => import('layouts/MainLayout.vue'),
@@ -50,6 +38,19 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: '/profile',
+    component: () => import('layouts/MainLayout.vue'),
+    meta: { hideen: true},
+    children: [
+      {
+        path: '/',
+        name: 'Profile',
+        alias: '',
+        component: () => import('pages/profile/Profile.vue')
+      }
+    ]
+  },
+  {
     path: '/401',
     component: () => import('pages/ErrorPage401.vue'),
     meta: { hidden: true }
@@ -58,6 +59,7 @@ const routes: RouteRecordRaw[] = [
   clientRouter,
   taskRouter,
   permissionRouter,
+  mail,
   // Always leave this as last one,
   // but you can also remove it
   {

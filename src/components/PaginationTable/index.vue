@@ -57,6 +57,18 @@
                   />
                 </q-td>
               </template>
+              <template v-else-if="column.type === 'fixedSize'">
+                <q-td
+                  :key="column.name"
+                  :width="column.width ? column.width : ''"
+                  :props="props"
+                >
+                  <q-tooltip anchor="top middle" max-width="500px">
+                    {{ props.row[column.name] }}
+                  </q-tooltip>
+                  {{ props.row[column.name].slice(column.startIdx, column.startIdx + column.length) }}
+                </q-td>
+              </template>
               <template v-else>
                 <q-td
                   :key="column.name"
@@ -112,6 +124,18 @@
                           :color-selected="column.colors"
                           readonly
                         />
+                      </q-item-label>
+                    </template>
+                    <template v-else-if="column.type === 'fixedSize'">
+                      <q-item-label caption>
+                        :key="column.name"
+                        :width="column.width ? column.width : ''"
+                        :props="props"
+                      >
+                        <q-tooltip anchor="top middle" max-width="80%">
+                          {{ props.row[column.name] }}
+                        </q-tooltip>
+                        {{ props.row[column.name].slice(column.startIdx, column.startIdx + column.length) }}
                       </q-item-label>
                     </template>
                     <template v-else>

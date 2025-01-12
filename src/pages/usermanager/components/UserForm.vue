@@ -72,13 +72,26 @@
                 dense
                 :rules="[ val => val !== '' || '请选择用户性别' ]"
               />
-              <q-input
-                outlined
-                dense
-                v-model="userInfo.birthday"
-                type="date"
-                hint="生日"
-              />
+<!--              <q-input-->
+<!--                outlined-->
+<!--                dense-->
+<!--                v-model="userInfo.birthday"-->
+<!--                type="date"-->
+<!--                hint="生日"-->
+<!--              />-->
+              <q-input filled :model-value="`${userInfo.birthday ? userInfo.birthday : 'dd-mm-yyyy'}`" dense readonly>
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-date v-model="userInfo.birthday" mask="DD-MM-YYYY">
+                        <div class="row items-center justify-end">
+                          <q-btn v-close-popup label="Close" color="primary" flat />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
               <q-input
                 v-if="operation === 'create'"
                 outlined

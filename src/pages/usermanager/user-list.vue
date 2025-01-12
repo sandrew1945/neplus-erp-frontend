@@ -257,7 +257,7 @@ import { useRouter } from 'vue-router'
       let birthday = ''
       if (res.data.birthday) {
         // const extractBirthday = date.extractDate(res.data.birthday, 'YYYY-MM-DD HH:mm:ss')
-        birthday = date.formatDate(res.data.birthday, 'YYYY-MM-DD')
+        birthday = date.formatDate(res.data.birthday, 'DD-MM-YYYY')
       }
       userInfo.value.userId = res.data.userId
       userInfo.value.userCode = res.data.userCode
