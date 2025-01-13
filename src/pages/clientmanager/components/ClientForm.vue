@@ -105,27 +105,52 @@
             v-model="clientInfo.clientKbk"
             :rules="[ val => val && val.length > 0 || '请输入客户工商号']"
           />
-          <q-input
-            outlined
-            dense
-            v-model="clientInfo.serviceStart"
-            type="date"
-            hint="开始服务日期"
-            :rules="[ val => val && val.length > 0 || '请输入开始服务日期']"
-          />
-          <q-input
-            outlined
-            dense
-            v-model="clientInfo.serviceEnd"
-            type="date"
-            hint="结束服务日期"
-          />
+          <q-input filled hint="开始服务日期" :model-value="`${clientInfo.serviceStart ? clientInfo.serviceStart : 'dd-mm-yyyy'}`" dense readonly>
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="clientInfo.serviceStart" mask="DD-MM-YYYY">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+          <q-input filled hint="结束服务日期" :model-value="`${clientInfo.serviceEnd ? clientInfo.serviceEnd : 'dd-mm-yyyy'}`" dense readonly>
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                  <q-date v-model="clientInfo.serviceEnd" mask="DD-MM-YYYY">
+                    <div class="row items-center justify-end">
+                      <q-btn v-close-popup label="Close" color="primary" flat />
+                    </div>
+                  </q-date>
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
           <q-input
             outlined
             dense
             label="地址"
             v-model="clientInfo.clientAddress"
             :rules="[ val => val && val.length > 0 || '请输入客户地址']"
+          />
+          <q-input
+            outlined
+            dense
+            label="邮编"
+            v-model="clientInfo.clientPostcode"
+            :rules="[ val => val && val.length > 0 || '请输入客户邮编']"
+          />
+          <q-input
+            outlined
+            dense
+            label="城市"
+            v-model="clientInfo.clientCity"
+            :rules="[ val => val && val.length > 0 || '请输入客户城市']"
           />
           <q-input
             outlined
@@ -137,8 +162,8 @@
           <q-input
             outlined
             dense
-            label="电话"
-            v-model="clientInfo.clientTel"
+            label="联系人"
+            v-model="clientInfo.clientLinkman"
           />
           <q-input
             outlined

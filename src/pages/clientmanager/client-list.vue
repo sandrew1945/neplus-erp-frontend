@@ -187,8 +187,10 @@ const store = useUserStore()
     clientKbk: null,
     clientFee: null,
     clientMobile: null,
-    clientTel: null,
+    clientLinkman: null,
     clientAddress: null,
+    clientPostcode: null,
+    clientCity: null,
     description: null
   })
 
@@ -270,11 +272,10 @@ const store = useUserStore()
       let serviceStart = ''
       let serviceEnd = ''
       if (res.data.serviceStart) {
-        // const extractBirthday = date.extractDate(res.data.birthday, 'YYYY-MM-DD HH:mm:ss')
-        serviceStart = date.formatDate(res.data.serviceStart, 'YYYY-MM-DD')
+        serviceStart = date.formatDate(res.data.serviceStart, 'DD-MM-YYYY')
       }
       if (res.data.serviceEnd) {
-        serviceEnd = date.formatDate(res.data.serviceEnd, 'YYYY-MM-DD')
+        serviceEnd = date.formatDate(res.data.serviceEnd, 'DD-MM-YYYY')
       }
       clientInfo.value.clientId = res.data.clientId
       clientInfo.value.clientName = res.data.clientName
@@ -287,8 +288,10 @@ const store = useUserStore()
       clientInfo.value.clientTaxNo = res.data.clientTaxNo
       clientInfo.value.clientKbk = res.data.clientKbk
       clientInfo.value.clientAddress = res.data.clientAddress
+      clientInfo.value.clientPostcode = res.data.clientPostcode
+      clientInfo.value.clientCity = res.data.clientCity
       clientInfo.value.clientEmail = res.data.clientEmail
-      clientInfo.value.clientTel = res.data.clientTel
+      clientInfo.value.clientLinkman = res.data.clientLinkman
       clientInfo.value.clientMobile = res.data.clientMobile
       clientInfo.value.description = res.data.description
       clientInfo.value.serviceStart = serviceStart
@@ -314,8 +317,10 @@ const store = useUserStore()
       clientFee: null,
       clientEmail: null,
       clientMobile: null,
-      clientTel: null,
+      clientLinkman: null,
       clientAddress: null,
+      clientPostcode: null,
+      clientCity: null,
       description: null
     }
   }

@@ -23,7 +23,9 @@ export type ClientInfo = {
     clientEmail: string | null;
     clientFee: string | null;
     clientMobile: string | null;
-    clientTel: string | null;
+    clientLinkman: string | null;
     clientAddress: string | null;
+    clientPostcode: string | null;
+    clientCity: string | null;
     description: string | null;
 }
