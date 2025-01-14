@@ -27,19 +27,19 @@
             clearable
           />
         </n-container>
-        <n-container
-          :sm="10"
-          :mid="2"
-          :lg="2"
-        >
-          <FixcodeSelect
-            :fixcodetype="'2003'"
-            v-model:model="listQuery.declareType"
-            placeholder="申报周期"
-            dense
-            clearable
-          />
-        </n-container>
+<!--        <n-container-->
+<!--          :sm="10"-->
+<!--          :mid="2"-->
+<!--          :lg="2"-->
+<!--        >-->
+<!--          <FixcodeSelect-->
+<!--            :fixcodetype="'2003'"-->
+<!--            v-model:model="listQuery.declareType"-->
+<!--            placeholder="申报周期"-->
+<!--            dense-->
+<!--            clearable-->
+<!--          />-->
+<!--        </n-container>-->
         <n-container
           :sm="10"
           :mid="2"
@@ -217,11 +217,11 @@ const store = useUserStore()
   const columns = [
         { name: 'clientName', label: '客户名称', field: 'clientName', width: '200px', type: 'data', align: 'center', sortable: true },
         { name: 'clientType', label: '客户类型', field: 'clientType', type: 'fixcode', align: 'center', sortable: false },
-        { name: 'declarePeriod', label: '申报周期', field: 'declarePeriod', type: 'fixcode', align: 'center', sortable: false },
+        // { name: 'declarePeriod', label: '申报周期', field: 'declarePeriod', type: 'fixcode', align: 'center', sortable: false },
         { name: 'optName', label: '负责人', field: 'optName', type: 'data', align: 'center', sortable: false },
         { name: 'approveName', label: '审批人', field: 'approveName', type: 'data', align: 'center', sortable: false },
-        { name: 'clientIct', label: 'ICT', field: 'clientIct', type: 'data', align: 'center', sortable: false },
-        { name: 'clientVat', label: 'VAT', field: 'clientVat', type: 'data', align: 'center', sortable: false },
+        { name: 'clientIct', label: 'ICT', field: 'clientIct', type: 'fixcode', align: 'center', sortable: false },
+        { name: 'clientVat', label: 'VAT', field: 'clientVat', type: 'fixcode', align: 'center', sortable: false },
         { name: 'clientId', label: '操作', field: 'clientId', type: 'slot', align: 'center', sortable: false }
   ]
 

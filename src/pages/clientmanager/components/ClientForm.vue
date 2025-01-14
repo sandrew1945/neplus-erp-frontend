@@ -50,18 +50,19 @@
           />
           <FixcodeSelect
             :fixcodetype="'2002'"
+            clearable
             v-model:model="clientInfo.clientType"
             :placeholder="'公司类型'"
             dense
             :rules="[ val => val !== '' || '请选择角色类型' ]"
           />
-          <FixcodeSelect
-            :fixcodetype="'2003'"
-            v-model:model="clientInfo.declarePeriod"
-            placeholder="申报周期"
-            dense
-            :rules="[ val => val !== '' || '请选择申报周期' ]"
-          />
+<!--          <FixcodeSelect-->
+<!--            :fixcodetype="'2003'"-->
+<!--            v-model:model="clientInfo.declarePeriod"-->
+<!--            placeholder="申报周期"-->
+<!--            dense-->
+<!--            :rules="[ val => val !== '' || '请选择申报周期' ]"-->
+<!--          />-->
           <UserSelect
             v-if="store.getRoleType !== 20041003"
             v-model:model="clientInfo.optId"
@@ -77,19 +78,35 @@
             dense
             clearable
           />
-          <q-input
-            outlined
+<!--          <q-input-->
+<!--            outlined-->
+<!--            dense-->
+<!--            label="ICT"-->
+<!--            v-model="clientInfo.clientIct"-->
+<!--            :rules="[ val => val && val.length > 0 || '请输入客户ICT']"-->
+<!--          />-->
+<!--          <q-input-->
+<!--            outlined-->
+<!--            dense-->
+<!--            label="VAT"-->
+<!--            v-model="clientInfo.clientVat"-->
+<!--            :rules="[ val => val && val.length > 0 || '请输入客户VAT']"-->
+<!--          />-->
+          <FixcodeSelect
+            :fixcodetype="'2007'"
+            clearable
+            v-model:model="clientInfo.clientIct"
+            placeholder="ICT"
             dense
-            label="ICT"
-            v-model="clientInfo.clientIct"
-            :rules="[ val => val && val.length > 0 || '请输入客户ICT']"
+            :rules="[ val => val !== '' || '请选择ICT' ]"
           />
-          <q-input
-            outlined
+          <FixcodeSelect
+            :fixcodetype="'2007'"
+            clearable
+            v-model:model="clientInfo.clientVat"
+            placeholder="VAT"
             dense
-            label="VAT"
-            v-model="clientInfo.clientVat"
-            :rules="[ val => val && val.length > 0 || '请输入客户VAT']"
+            :rules="[ val => val !== '' || '请选择VAT' ]"
           />
           <q-input
             outlined
@@ -157,7 +174,7 @@
             dense
             label="电子邮箱"
             v-model="clientInfo.clientEmail"
-            :rules="[ val => val && val.length > 0 || '请输入客户电子邮箱']"
+            :rules="[ clientEmailVal ]"
           />
           <q-input
             outlined
@@ -294,6 +311,21 @@ const clientNameVal = (val) => {
           resolve(true)
         }
       })
+    })
+  }
+}
+
+const clientEmailVal = (email) => {
+  if (email === '') {
+    return '请输入客户邮箱, 多个邮箱使用;分割'
+  } else {
+    return new Promise((resolve) => {
+      const emailRegex = /^([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\s*;\s*[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})*$/;
+      if (emailRegex.test(email)) {
+        resolve(true)
+      } else {
+        resolve('客户邮箱格式不正确, 多个邮箱使用;分割')
+      }
     })
   }
 }

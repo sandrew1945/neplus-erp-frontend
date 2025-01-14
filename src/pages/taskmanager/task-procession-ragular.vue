@@ -196,7 +196,7 @@ const taskInfo = ref<TaskInfo>({
   clientType: '',
   clientEmail: null,
   clientMobile: null,
-  clientTel: null,
+  // clientTel: null,
   optName: null,
   approveName: null,
   taskType: '',
@@ -229,7 +229,7 @@ const getTaskInfo = () => {
     taskInfo.value.clientType = response.data.clientType
     taskInfo.value.clientEmail = response.data.clientEmail
     taskInfo.value.clientMobile = response.data.clientMobile
-    taskInfo.value.clientTel = response.data.clientTel
+    // taskInfo.value.clientTel = response.data.clientTel
     taskInfo.value.optName = response.data.optName
     taskInfo.value.approveName = response.data.approveName
     taskInfo.value.taskType = '' + response.data.taskType

@@ -19,7 +19,7 @@ export type TaskInfo = {
   clientType: string;
   clientEmail: string | null;
   clientMobile: string | null;
-  clientTel: string | null;
+  // clientTel: string | null;
   optName: string | null;
   approveName: string | null;
   taskType: string;

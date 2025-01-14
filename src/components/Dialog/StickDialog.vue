@@ -2,6 +2,7 @@
   <q-dialog
     v-model="showDialog"
     :position="position"
+    persistent
     transition-show="rotate"
     transition-hide="rotate"
   >

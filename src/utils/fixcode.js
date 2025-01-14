@@ -13,6 +13,7 @@ const codeData = {
     { fixcodeId: '20011004', type: '2001', typeName: '员工状态', codeDesc: '离岗退养' },
     { fixcodeId: '20021001', type: '2002', typeName: '公司类型', codeDesc: 'Eenmanzaak' },
     { fixcodeId: '20021002', type: '2002', typeName: '公司类型', codeDesc: 'B.V.' },
+    { fixcodeId: '20021003', type: '2002', typeName: '公司类型', codeDesc: 'V.O.F' },
     { fixcodeId: '20031001', type: '2003', typeName: '申报周期', codeDesc: '月报' },
     { fixcodeId: '20031002', type: '2003', typeName: '申报周期', codeDesc: '季报' },
     { fixcodeId: '20041001', type: '2004', typeName: '角色类型', codeDesc: '系统管理' },
@@ -29,8 +30,10 @@ const codeData = {
     { fixcodeId: '20061006', type: '2006', typeName: '任务状态', codeDesc: '内部驳回' },
     { fixcodeId: '20061007', type: '2006', typeName: '任务状态', codeDesc: '等待申报' },
     { fixcodeId: '20061008', type: '2006', typeName: '任务状态', codeDesc: '外部驳回' },
-    { fixcodeId: '20061009', type: '2006', typeName: '任务状态', codeDesc: '提交申报' }
-
+    { fixcodeId: '20061009', type: '2006', typeName: '任务状态', codeDesc: '提交申报' },
+    { fixcodeId: '20071001', type: '2007', typeName: '申报类型', codeDesc: '无' },
+    { fixcodeId: '20071002', type: '2007', typeName: '申报类型', codeDesc: '月度' },
+    { fixcodeId: '20071003', type: '2007', typeName: '申报类型', codeDesc: '季度' }
   ]
 }
 
