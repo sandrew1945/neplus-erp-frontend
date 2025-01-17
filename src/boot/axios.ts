@@ -69,7 +69,7 @@ request.interceptors.response.use((response) => {
   // if the custom code is not 20000, it is judged as an error.
   if (res.result === false || res.result === 0) {
     errorNotify(res.msg)
-    return res
+    return Promise.reject()
   } else {
     return res
   }

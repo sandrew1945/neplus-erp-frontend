@@ -9,6 +9,7 @@ export type MailListQuery = {
 export type MailTemplateInfo = {
     templateId: number | null;
     templateName: string | null;
+    templateSubject: string | null;
     templateContent: string | null;
     templateStatus: string | null;
 }

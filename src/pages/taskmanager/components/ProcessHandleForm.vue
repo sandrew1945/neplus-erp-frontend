@@ -55,14 +55,15 @@
             <q-select
               dense
               outlined
-              v-model="emailContent"
+              v-model="templateuId"
               :options="mailTemplate"
-              option-value="templateContent"
+              option-value="templateuId"
               option-label="templateName"
               emit-value
               map-options
               label="选择邮件模版"
               class="col-md-5 col-xs-12"
+              @update:model-value="changeTemplate"
             />
           </div>
           <div class="row justify-between">
@@ -72,8 +73,15 @@
                 v-model:model="fileId"
               />
             </div>
-            <div v-if="props.processStatus === 20061004 || props.processStatus === 20061007" class="col-8">
-              <q-editor v-model="emailContent" placeholder="请输入邮件内容" min-height="15rem" />
+            <div v-if="props.processStatus === 20061004 || props.processStatus === 20061007" class="column justify-start q-gutter-sm col-8">
+              <div class="col-1">
+                <q-input dense outlined v-model="emailSubject" label="邮件主题" class="col-md-12 col-xs-12"/>
+              </div>
+              <div class="col-10">
+                <q-editor v-model="emailContent" placeholder="请输入邮件内容" min-height="15rem" />
+              </div>
+
+
             </div>
             <div v-else :class="props.processStatus === 20061004 || props.processStatus === 20061007 ? 'col-8' : 'col-12'">
               <q-editor v-model="comment" placeholder="请输入意见" min-height="15rem" />
@@ -198,6 +206,8 @@ import {
   makeTaskStart
 } from 'src/api/taskmanager';
 import { useRouter } from 'vue-router';
+import { MailTemplateInfo } from 'src/models/mailmanager-model';
+import { fetchMailTemplate } from 'src/api/mailmanager';
 
 const props = defineProps({
   model: {
@@ -220,6 +230,7 @@ const props = defineProps({
 })
 const fileId = ref<number|null>(null)
 const comment = ref<string|null>(null)
+const emailSubject = ref<string|null>(null)
 const emailContent = ref<string|null>(null)
 const emit = defineEmits(['update:model', 'refreshList'])
 const showDialog = computed({
@@ -326,7 +337,7 @@ const handleDraftSent = () => {
         warningNotify('请上传申报单草稿')
         return
       }
-      makeTaskDraftSent({'taskId': props.taskId, 'emailContent': emailContent.value, 'fileId': fileId.value}).then(() => {
+      makeTaskDraftSent({'taskId': props.taskId, 'emailSubject': emailSubject.value, 'emailContent': emailContent.value, 'fileId': fileId.value}).then(() => {
         successNotify('Update Successfully')
         nextTick(() => {
           // props.reset()
@@ -387,7 +398,12 @@ const clientReject = () => {
 const handleDeclaration = () => {
   processForm.value.validate().then(success => {
     if (success) {
-      makeTaskDeclaration({'taskId': props.taskId, 'comment': comment.value, 'fileId': fileId.value}).then(() => {
+      if (!fileId.value)
+      {
+        warningNotify('请上传申报单')
+        return
+      }
+      makeTaskDeclaration({'taskId': props.taskId, 'emailSubject': emailSubject.value, 'emailContent': emailContent.value, 'fileId': fileId.value}).then(() => {
         successNotify('Update Successfully')
         nextTick(() => {
           // props.reset()
@@ -403,6 +419,13 @@ const handleDeclaration = () => {
   })
 }
 
+const changeTemplate = async(val : MailTemplateInfo) => {
+  console.log(val.templateId)
+  await fetchMailTemplate(val.templateId).then((res) => {
+    emailSubject.value = res.data.templateSubject
+    emailContent.value = res.data.templateContent
+  })
+}
 
 const returnBack = () => {
   if (optType.value === 'handle') {

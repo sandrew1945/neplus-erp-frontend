@@ -140,6 +140,7 @@ const operation = ref('')
 const mailTemplateInfo = ref<MailTemplateInfo>({
   templateId: null,
   templateName: null,
+  templateSubject: null,
   templateContent: null,
   templateStatus: ''
 })
@@ -161,7 +162,8 @@ const pagination = ref<PageInfo>({
 })
 const columns = [
   { name: 'templateName', label: '模版名称', field: 'templateName', type: 'data', align: 'center', sortable: false },
-  { name: 'templateContent', label: '模版内容', field: 'templateContent', type: 'fixedSize', startIdx: '0', length: '100', align: 'center', sortable: false },
+  { name: 'templateSubject', label: '邮件主题', field: 'templateSubject', type: 'data', align: 'center', sortable: false },
+  { name: 'templateContent', label: '邮件正文', field: 'templateContent', type: 'fixedSize', startIdx: '0', length: '100', align: 'center', sortable: false },
   { name: 'templateStatus', label: '模版状态', field: 'templateStatus', type: 'fixcode', align: 'center' ,sortable: false },
   { name: 'templateId', label: '操作', field: 'templateId', type: 'slot', align: 'center', sortable: false }
 ]
@@ -212,6 +214,7 @@ const handleUpdate = async(templateId: number) => {
   await fetchMailTemplate(templateId).then((res) => {
     mailTemplateInfo.value.templateId = res.data.templateId
     mailTemplateInfo.value.templateName = res.data.templateName
+    mailTemplateInfo.value.templateSubject = res.data.templateSubject
     mailTemplateInfo.value.templateContent = res.data.templateContent
     mailTemplateInfo.value.templateStatus = '' + res.data.templateStatus
     showEditor.value = true

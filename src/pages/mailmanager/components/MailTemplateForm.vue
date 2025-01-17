@@ -57,6 +57,13 @@
                 dense
                 :rules="[ val => val !== '' || '请选择用户状态' ]"
               />
+              <q-input
+                outlined
+                dense
+                v-model="mailTemplateInfo.templateSubject"
+                label="邮件主题"
+                :rules="[ val => val && val.length > 0 || '请输入邮件主题']"
+              />
               <q-editor v-model="mailTemplateInfo.templateContent" min-height="20rem" />
               <div>
                 <q-btn
